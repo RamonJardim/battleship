@@ -1,7 +1,9 @@
+package ships;
+
 public class Submarine extends Ship {
     
-    public Submarine() {
-        super("Submarine", 1);
+    public Submarine(int posX, int posY) {
+        super("Submarine", 3, posX, posY);
     }
     
 }
