@@ -3,14 +3,20 @@ package elements;
 import ships.*;
 
 public class Tile {
-    private Ship inTile;
+    private boolean hit = false;
+    private Ship shipInTile;
     
-    public Tile(Ship inTile){
-        this.inTile = inTile;
+    public Tile(Ship ship){
+        addShip(ship);
     }
     
-    public boolean hit() {
-        return this.inTile.hit();
+    boolean hit() {
+        this.hit = true;
+        return this.shipInTile.hit();
+    }
+    
+    void addShip(Ship ship) {
+        this.shipInTile = ship;
     }
     
 }
