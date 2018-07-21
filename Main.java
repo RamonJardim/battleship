@@ -1,22 +1,25 @@
+import javafx.application.Application;
 import javax.swing.JFrame;
 import java.awt.Rectangle;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import javafx.stage.Stage;
 
-public class Main {
+import elements.*;
+import ships.*;
+
+public class Main extends Application{
     public static void main(String[] args) {
-        JFrame window = new JFrame();
-        window.setSize(1024,728);
+       /* JFrame window = new JFrame();
+        window.setSize(1366,768);
         window.setTitle("Battleship");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setVisible(true);
         
         DrawingComponent DC = new DrawingComponent();
         window.add(DC);
-        
-        JButton b = new JButton("Tile"/*, new ImageIcon("Madeira.jpg")*/); 
-        b.setBounds(50,50,50, 50); /* x, y, largura, altura */
+         
         
         
         JButton[][] tabuleiro = new JButton[10][10];
@@ -27,8 +30,15 @@ public class Main {
                 tabuleiro[i][j].setBounds(50*(i+1), 50*(j+1), 50, 50);
                 window.add(tabuleiro[i][j]);
             }
-        } 
+        } */
+        launch(args);
         
+    }
+    
+    @Override
+    public void start(Stage window) {
+        window.setTitle("HEY");
+        window.show();
     }
 
 }
