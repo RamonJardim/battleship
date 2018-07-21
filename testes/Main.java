@@ -1,3 +1,5 @@
+package testes;
+
 import javafx.application.Application;
 import javax.swing.JFrame;
 import java.awt.Rectangle;
