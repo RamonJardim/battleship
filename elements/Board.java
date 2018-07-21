@@ -2,7 +2,7 @@ package elements;
 
 import ships.*;
 
-public class Board {
+class Board {
     Tile[][] board = new Tile [10][10];
     private int shipsAlive = 7;
     
@@ -18,14 +18,18 @@ public class Board {
         }
     }
     
-    public void hit(int posX, int posY) {
-        boolean destroyed = board[posY][posX].hit();
-        if(destroyed) {
-            shipsAlive--;
+    public boolean hit(int posX, int posY) {
+        Tile tile = board[posY][posX];
+        boolean isShip = tile.hit();
+        if(isShip) {
+            if(tile.isDestroyed()){
+                shipsAlive--;
+            }
         }
+        return isShip;
     }
     
-    public boolean isAlive () {
+    boolean isAlive () {
         return shipsAlive > 0;
     }
     
@@ -40,6 +44,10 @@ public class Board {
         } else {
             addShipHorizontal(x, y, ship, size);
         }
+    }
+    
+    public boolean isDestroyed(int posX, int posY) {
+        return board[posY][posX].isDestroyed();
     }
     
     private void addShipVertical(int x, int y, Ship ship, int size) {

@@ -6,7 +6,7 @@ public class Tile {
     private boolean hit = false;
     private Ship shipInTile;
     
-    public Tile(Ship ship){
+    Tile(Ship ship){
         addShip(ship);
     }
     
@@ -19,4 +19,7 @@ public class Tile {
         this.shipInTile = ship;
     }
     
+    boolean isDestroyed(){
+        return shipInTile.getDestroyed();
+    }
 }

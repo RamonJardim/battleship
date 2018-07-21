@@ -16,12 +16,12 @@ public abstract class Ship {
         this.vertical = vertical;
     }
     
-    public boolean hit(){ // Retorna o estado do navio (true = destruido)
+    public boolean hit(){ // Retorna true se nao acertou agua, eh sobrescrito na classe Water
         DestroyedBlocks++;
         if(DestroyedBlocks >= size) {
             isDestroyed = true;
         }
-        return isDestroyed;
+        return true;
     }    
     
     public int getSize(){
@@ -38,5 +38,9 @@ public abstract class Ship {
     
     public boolean getOrientation(){
         return this.vertical;
+    }
+    
+    public boolean getDestroyed() {
+        return this.isDestroyed;
     }
 }

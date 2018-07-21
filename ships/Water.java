@@ -6,4 +6,9 @@ public class Water extends Ship{
         super("Water", 1, posX, posY, false);
     }
     
+    
+    @Override
+    public boolean hit() {
+        return false;
+    }
 }
