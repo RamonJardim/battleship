@@ -38,7 +38,7 @@ public class Main extends Application{
     @Override
     public void start(Stage window) {
         window.setTitle("HEY");
-        System.out.println("oi");
+        System.out.println("HEY");
         window.show();
     }
 
