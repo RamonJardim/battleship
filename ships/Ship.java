@@ -43,4 +43,8 @@ public abstract class Ship {
     public boolean getDestroyed() {
         return this.isDestroyed;
     }
+    
+    public String getType(){
+        return this.type;
+    }
 }

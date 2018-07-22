@@ -2,7 +2,7 @@ package elements;
 
 import ships.*;
 
-public class Tile {
+class Tile {
     private boolean hit = false;
     private Ship shipInTile;
     
