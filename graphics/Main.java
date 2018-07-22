@@ -20,26 +20,7 @@ public class Main extends Application{
     Button[][] table = new Button[10][10];
     
     public static void main(String[] args) {
-       /* JFrame window = new JFrame();
-        window.setSize(1366,768);
-        window.setTitle("Battleship");
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setVisible(true);
-        
-        DrawingComponent DC = new DrawingComponent();
-        window.add(DC);
-         
-        
-        
-        JButton[][] tabuleiro = new JButton[10][10];
-        
-        for(int i = 0 ; i < 10 ; i++) {
-            for(int j = 0 ; j < 10 ; j++) {
-                tabuleiro[i][j] = new JButton (i +","+j);
-                tabuleiro[i][j].setBounds(50*(i+1), 50*(j+1), 50, 50);
-                window.add(tabuleiro[i][j]);
-            }
-        } */
+
         launch(args);
         
     }
