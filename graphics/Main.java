@@ -20,7 +20,7 @@ public class Main extends Application{
     Button[][] table = new Button[10][10];
     
     public static void main(String[] args) {
-
+        
         launch(args);
         
     }
