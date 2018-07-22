@@ -20,7 +20,11 @@ public class Main extends Application{
     Button[][] table = new Button[10][10];
     
     public static void main(String[] args) {
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 6b38c4542d3d7c8cf00e0bdda76b0b816751ea24
         launch(args);
         
     }
