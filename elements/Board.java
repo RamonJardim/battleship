@@ -10,6 +10,11 @@ class Board {
         initializeBoard();
     }
     
+    public Coordinates[] getShipParts(int x, int y){
+        Ship ship = board[y][x].getShip();
+        return ship.getPartsPositions();
+    }
+    
     private void initializeBoard() {                     // enche o tabuleiro de agua
         for(int i = 0 ; i < board.length ; i++) {
             for(int j = 0 ; j < board[0].length ; j++) {
@@ -99,15 +104,23 @@ class Board {
     }
     
     private void addShipVertical(int x, int y, Ship ship, int size) {
+        Coordinates<Integer, Integer>[] otherParts = new Coordinates [size];
         for(int i = y ; i < (y+size) ; i++) {
             board[i][x].addShip(ship);
+            otherParts[i-y] = new Coordinates (x, i);
         }
+        
+        ship.setPartsPositions(otherParts);
     }
 
     private void addShipHorizontal(int x, int y, Ship ship, int size) {
+        Coordinates<Integer, Integer>[] otherParts = new Coordinates [size];
         for(int i = x ; i < (x+size) ; i++) {
+            ship.setPartsPositions(otherParts);
             board[y][i].addShip(ship);
+            otherParts[i-x] = new Coordinates (x, y);
         }
+        ship.setPartsPositions(otherParts);
     }
     
 }

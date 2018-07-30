@@ -48,7 +48,7 @@ abstract class ScreenShot {
         addColumnGap(gridPane, 10, 50);
         
         Text player1 = new Text();
-        player1.setText("Player 1");
+        player1.setText(controller.getPlayer1().getName());
         player1.setFont(new Font (25));
         GridPane.setConstraints(player1, 11, 1);
         gridPane.getChildren().add(player1);
@@ -67,11 +67,7 @@ abstract class ScreenShot {
         addColumnGap(gridPane, 25, 50);
      
         Text player2 = new Text();
-        if(gameMode == 1){
-            player2.setText("Player 2");
-        } else {
-            player2.setText("BOT");
-        }
+        player2.setText(controller.getPlayer2().getName());
         player2.setFont(new Font (25));
         GridPane.setConstraints(player2, 26, 1);
         gridPane.getChildren().add(player2);
@@ -126,9 +122,15 @@ abstract class ScreenShot {
                     gridToShoot[y][x].setStyle("-fx-base: #0000ff");
                     if(playerToShoot.shot(x, y)){
                         gridToShoot[y][x].setStyle("-fx-base: #ff0000");
+                        if(playerToShoot.isDestroyed(x, y)){
+                            Coordinates[] coords = playerToShoot.getShipParts(x, y);
+                            for (int k = 0; k < coords.length; k++) {
+                                gridToShoot[coords[k].getY()][coords[k].getX()].setStyle("-fx-base: #000000");
+                            }
+                        }
                         if(!playerToShoot.isAlive()){
                             primaryStage.close();
-                            AlertBox.advice("Fim de jogo", "Venceu");
+                            AlertBoxes.advice("Fim de jogo!\n", playerShooting.getName()+" Venceu!");
                         }
                     } else {
                         if(numberPlayerShooting == 1) {

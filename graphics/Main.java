@@ -14,7 +14,7 @@ public class Main extends Application{
     
     @Override
     public void start(Stage primaryStage) {
-        AlertBox.choice(primaryStage, "GameMode", "Escolha o modo de jogo: ","PVP", "PVE");
+        AlertBoxes.choice(primaryStage, "GameMode", "Escolha o modo de jogo: ","PVP", "PVE");
     }
 
 }

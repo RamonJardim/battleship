@@ -14,139 +14,140 @@ import elements.*;
 import ships.*;
 
 abstract class ScreenPlace {
-    
+
     private static Controller controller;
-    private static boolean p1IsVertical;
-    private static boolean p2IsVertical;
     private static Stage primaryStage;
     private static int gameMode;
 
-    
-    static void start(Stage primaryStage, int gameMode) { // 1 = PVP, 0 = PVE
+    static void start(Stage primaryStage, int gameMode) { // 1 = PVP, 2 = PVE
         ScreenPlace.primaryStage = primaryStage;
         ScreenPlace.gameMode = gameMode;
-        
+
         controller = new Controller(gameMode == 1);
         Button[][] tableP1 = new Button[10][10];
         Button[][] tableP2 = new Button[10][10];
         primaryStage.setTitle("Battleship");
         primaryStage.setResizable(false);
         GridPane gridPane = new GridPane();
-        
+
         generatePanel(tableP1, tableP2, gridPane, gameMode);
-        
-        Scene scene = new Scene(gridPane, 1011,350);
+
+        Scene scene = new Scene(gridPane, 1011, 350);
         primaryStage.setScene(scene);
         primaryStage.show();
+
     }
-    
+
     private static void generatePanel(Button[][] tableP1, Button[][] tableP2,
-            GridPane gridPane, int gameMode) { /* PVP = 1 ou PVE = 2 */     
-        /*-------------------Player1-----------------------*/
+            GridPane gridPane, int gameMode) {
+        /* PVP = 1 ou PVE = 2 */
+ /*-------------------Player1-----------------------*/
         addColumnGap(gridPane, 0, 10);
-        
+
         createGrid(tableP1, gridPane, 0);
-        
+
         addColumnGap(gridPane, 10, 50);
-        
-        Button orientationP1 = new Button (controller.getPlayer1().getTextOrientation());
+
+        Button orientationP1 = new Button(controller.getPlayer1().getTextOrientation());
         add(gridPane, orientationP1, 11, 2, 100, 35);
-        
-        Button shipP1 = new Button (controller.getPlayer2().getTextShipAdding());
+
+        Button shipP1 = new Button(controller.getPlayer2().getTextShipAdding());
         add(gridPane, shipP1, 11, 3, 100, 35);
-        
+
         Text player1 = new Text();
-        player1.setText("Player 1");
-        player1.setFont(new Font (25));
+        player1.setText(controller.getPlayer1().getName());
+        player1.setFont(new Font(25));
         GridPane.setConstraints(player1, 11, 1);
         gridPane.getChildren().add(player1);
-        
+
         addColumnGap(gridPane, 12, 35);
-        
+
         drawVLine(gridPane, Color.BLACK, 13, 10, 35);
-        
+
         addColumnGap(gridPane, 14, 35);
-        
-        setButtonsToPlace(tableP1, shipP1, orientationP1, controller.getPlayer1());
-        
+
+        setButtonsToPlace(tableP1, tableP2, shipP1, orientationP1, controller.getPlayer1());
+
         /*-------------------Player2-----------------------*/
         createGrid(tableP2, gridPane, 15);
-        
+
         addColumnGap(gridPane, 25, 50);
-        
-        Button orientationP2 = new Button (controller.getPlayer2().getTextOrientation());
+
+        Button orientationP2 = new Button(controller.getPlayer2().getTextOrientation());
         add(gridPane, orientationP2, 26, 2, 100, 35);
-        
-        Button shipP2 = new Button (controller.getPlayer2().getTextShipAdding());
+
+        Button shipP2 = new Button(controller.getPlayer2().getTextShipAdding());
         add(gridPane, shipP2, 26, 3, 100, 35);
-     
+
         Text player2 = new Text();
-        if(gameMode == 1){
-            player2.setText("Player 2");
-        } else {
-            player2.setText("BOT");
-        }
-        player2.setFont(new Font (25));
+        player2.setText(controller.getPlayer2().getName());
+        player2.setFont(new Font(25));
         GridPane.setConstraints(player2, 26, 1);
         gridPane.getChildren().add(player2);
-        
+
         addColumnGap(gridPane, 27, 10);
-        setButtonsToPlace(tableP2, shipP2, orientationP2,controller.getPlayer2());
-        
-        
+        setButtonsToPlace(tableP2, tableP1, shipP2, orientationP2, controller.getPlayer2());
+
+        blockGrid(gameMode, tableP2, shipP2, orientationP2, false);
+
     }
-    
+
     private static void add(GridPane grid, Button add, int column, int line,
             int sizeX, int sizeY) {
         add.setPrefSize(sizeX, sizeY);
         GridPane.setConstraints(add, column, line);
-        grid.getChildren().add(add);      
+        grid.getChildren().add(add);
     }
-    
+
     private static void addColumnGap(GridPane grid, int column, int size) {
-        Rectangle gap = new Rectangle(size,1);
+        Rectangle gap = new Rectangle(size, 1);
         gap.setFill(Color.TRANSPARENT);
         grid.addColumn(column, gap);
     }
-    
-    private static void drawVLine(GridPane grid, Color color, int column, 
+
+    private static void drawVLine(GridPane grid, Color color, int column,
             int nLines, int lineHeight) {
-        for (int i = 0; i < nLines; i++) {    
-            Rectangle line = new Rectangle(1,lineHeight);
+        for (int i = 0; i < nLines; i++) {
+            Rectangle line = new Rectangle(1, lineHeight);
             line.setFill(color);
             grid.addColumn(column, line);
         }
     }
-    
-    private static void createGrid(Button[][] table, GridPane grid, int start){
+
+    private static void createGrid(Button[][] table, GridPane grid, int start) {
         for (int i = 0; i < table.length; i++) {
             for (int j = 0; j < table[0].length; j++) {
-                table[i][j] = new Button (j +","+i);
-                add(grid, table[i][j], (i+1)+start, j, 35, 35);
+                table[i][j] = new Button(j + "," + i);
+                add(grid, table[i][j], (i + 1) + start, j, 35, 35);
             }
-        }       
-        
+        }
     }
-    
-    private static void setButtonsToPlace(Button[][] grid, Button ship, 
+
+    private static void setButtonsToPlace(Button[][] gridPlacing, Button[][] gridToPlaceLater, Button ship,
             Button orientation, Player player) {
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[0].length; j++) {
-                final Button button = grid[i][j];
+        for (int i = 0; i < gridPlacing.length; i++) {
+            for (int j = 0; j < gridPlacing[0].length; j++) {
+                final Button button = gridPlacing[i][j];
                 final int x = j;
                 final int y = i;
-                grid[i][j].setOnAction((ActionEvent e) -> {
+                gridPlacing[i][j].setOnAction((ActionEvent e) -> {
                     addShip(player, x, y, player.getOrientationAdding(),
-                            player.getTextShipAdding(), grid);
+                            player.getTextShipAdding(), gridPlacing);
                     ship.setText(player.getTextShipAdding());
-                    
-                    if(ship.getText().equals("")) {
+
+                    if (ship.getText().equals("")) {
                         ship.setDisable(true);
                         orientation.setDisable(true);
-                        updateGameState(controller, controller.getGameState()+1, 
-                                grid, ship, orientation);
+
+                        if (controller.getGameState() == 0 || controller.getGameState() == 2) {
+                            updateGameState(controller, controller.getGameState() + 1,
+                                    gridPlacing, gridToPlaceLater, ship, orientation);
+                        } else {
+                            updateGameState(controller, controller.getGameState() + 1,
+                                    gridToPlaceLater, gridPlacing, ship, orientation);
+                        }
                     }
-                    
+
                 });
             }
         }
@@ -154,109 +155,126 @@ abstract class ScreenPlace {
             player.changeOrientationAdding();
             orientation.setText(player.getTextOrientation());
         });
-        
-        ship.setOnAction((ActionEvent e) -> { /* verificar */
+
+        ship.setOnAction((ActionEvent e) -> {
+            /* verificar */
             player.increaseShipAdding();
             ship.setText(player.getTextShipAdding());
-            if(ship.getText().equals("")) {
+            if (ship.getText().equals("")) {
                 ship.setDisable(true);
                 orientation.setDisable(true);
             }
         });
-        
+
     }
 
-    private static void fillShipSpace(Button[][] grid, int x, int y, boolean orientation, int size){
+    private static void fillShipSpace(Button[][] grid, int x, int y, boolean orientation, int size) {
         if (orientation) {
-            for (int i = y; i < (y+size); i++) {
+            for (int i = y; i < (y + size); i++) {
                 grid[i][x].setDisable(true);
                 grid[i][x].setStyle("-fx-base: #006600");
             }
         } else {
-            for (int i = x; i < (x+size); i++) {
+            for (int i = x; i < (x + size); i++) {
                 grid[y][i].setDisable(true);
                 grid[y][i].setStyle("-fx-base: #006600");
             }
         }
     }
-    
-    private static void addShip(Player player, int x, int y, 
+
+    private static void addShip(Player player, int x, int y,
             boolean orientation, String textShipAdding, Button[][] grid) {
-                
+
         boolean isOk;
-        if(textShipAdding.equals("Submarine (1)")) {
+        if (textShipAdding.equals("Submarine (1)")) {
             isOk = player.addShip(new Submarine(x, y, orientation));
-            if(isOk) {
+            if (isOk) {
                 fillShipSpace(grid, x, y, orientation, 1);
             }
         }
-        
-        if(textShipAdding.equals("Destroyer (2)")) {
+
+        if (textShipAdding.equals("Destroyer (2)")) {
             isOk = player.addShip(new Destroyer(x, y, orientation));
-            if(isOk) {
+            if (isOk) {
                 fillShipSpace(grid, x, y, orientation, 2);
             }
         }
-        
-        if(textShipAdding.equals("Cruiser (3)")) {
+
+        if (textShipAdding.equals("Cruiser (3)")) {
             isOk = player.addShip(new Cruiser(x, y, orientation));
-            if(isOk) {
+            if (isOk) {
                 fillShipSpace(grid, x, y, orientation, 3);
             }
         }
-        
-        if(textShipAdding.equals("Battleship (4)")) {
+
+        if (textShipAdding.equals("Battleship (4)")) {
             isOk = player.addShip(new Battleship(x, y, orientation));
-            if(isOk) {
+            if (isOk) {
                 fillShipSpace(grid, x, y, orientation, 4);
             }
         }
-        
-        if(textShipAdding.equals("Carrier (5)")) {
+
+        if (textShipAdding.equals("Carrier (5)")) {
             isOk = player.addShip(new Carrier(x, y, orientation));
-            if(isOk) {
+            if (isOk) {
                 fillShipSpace(grid, x, y, orientation, 5);
             }
         }
     }
-    
+
     private static void updateGameState(Controller controller, int newState,
-            Button[][] grid, Button ships, Button orientation) {
+            Button[][] gridP1, Button[][] gridP2, Button ships, Button orientation) { // 0 = P1 posicionando navios, 1 = P2 posicionando navios
+        // 2 = P1 jogando, 3 = P2 jogando
         controller.setGameState(newState);
-        if(newState == 0) {
-            blockGrid(2, grid, ships, orientation, true);
-            AlertBox.advice("Aviso", "Vez de P1 colocar seus navios.");
+        if (newState == 0) {
+            blockGrid(2, gridP2, ships, orientation, false);
+            AlertBoxes.advice("Aviso", "Vez de P1 colocar seus navios.");
         }
-        
-        if(newState == 1) {
-            blockGrid(1, grid, ships, orientation, true);
-            AlertBox.advice("Aviso", "Vez de P2 colocar seus navios.");
+
+        if (newState == 1) {
+            blockGrid(1, gridP1, ships, orientation, true);
+            unBlockGrid(gridP2);
+            AlertBoxes.advice("Aviso", "Vez de P2 colocar seus navios.");
         }
-        
-        if(newState == 2) {
-            blockGrid(2, grid, ships, orientation, true);
-            AlertBox.advice("Aviso", "Agora comeca o jogo.");
+
+        if (newState == 2) {
+            blockGrid(2, gridP2, ships, orientation, true);
+            AlertBoxes.advice("Aviso", "Agora comeca o jogo.");
             primaryStage.close();
             ScreenShot.start(primaryStage, ScreenPlace.gameMode, controller);
-            
+
         }
-        
-        if(newState == 3) {
-            blockGrid(1, grid, ships, orientation, false);
+
+        if (newState == 3) {
+            blockGrid(1, gridP1, ships, orientation, false);
         }
     }
-    
+
+    private static void unBlockGrid(Button[][] grid) {
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                grid[i][j].setDisable(false);
+            }
+        }
+    }
+
     private static void blockGrid(int player, Button[][] grid, Button ships, Button orientation,
             boolean toPaint) {
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
                 grid[i][j].setDisable(true);
-                if(toPaint) {
+                if (toPaint) {
                     grid[i][j].setStyle("-fx-base: #006600");
                 }
             }
         }
+
+        ships.setDisable(true);
+        orientation.setDisable(true);
+        if (toPaint) {
+            ships.setStyle("-fx-base: #006600");
+            orientation.setStyle("-fx-base: #006600");
+        }
     }
-    
-    
+
 }

@@ -3,6 +3,7 @@ package elements;
 import ships.*;
 
 public class Player {
+    private String name;
     private boolean human;
     private boolean inTurn;
     private boolean alive;
@@ -21,17 +22,21 @@ public class Player {
     private int nCarriersToAdd = 1;
     private int nShipsToAddToAdd = 7;
 
-    public Player(boolean human, int playerNumber) {
+    public Player(boolean human, int playerNumber, String name) {
+        this.name = name;
         this.playerShotsReceived = new boolean[10][10];
         this.human = human;
         this.playerNumber = playerNumber;
         this.playerBoard = new Board();
     }
     
-    public int getnShipsToAddToAdd() {
-        return nShipsToAddToAdd;
+    public String getName(){
+        return this.name;
     }
     
+    public Coordinates[] getShipParts(int x, int y){
+        return playerBoard.getShipParts(x, y);
+    }
     
     public boolean[][] getPlayerShotsReceived() {
         return playerShotsReceived;
