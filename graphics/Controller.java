@@ -14,6 +14,10 @@ public class Controller {
         this.gameState = 0;
     }
     
+    public void setGameState(int gameState) {
+        this.gameState = gameState;
+    }
+    
     public int getGameState() {
         return this.gameState;
     }

@@ -46,10 +46,10 @@ abstract class Screen {
         
         addColumnGap(gridPane, 10, 50);
         
-        Button orientationP1 = new Button ("Horizontal");
+        Button orientationP1 = new Button (controller.getPlayer1().getTextOrientation());
         add(gridPane, orientationP1, 11, 2, 100, 35);
         
-        Button shipP1 = new Button ("Submarine");
+        Button shipP1 = new Button (controller.getPlayer2().getTextShipAdding());
         add(gridPane, shipP1, 11, 3, 100, 35);
         
         Text player1 = new Text();
@@ -71,10 +71,10 @@ abstract class Screen {
         
         addColumnGap(gridPane, 25, 50);
         
-        Button orientationP2 = new Button ("Horizontal");
+        Button orientationP2 = new Button (controller.getPlayer2().getTextOrientation());
         add(gridPane, orientationP2, 26, 2, 100, 35);
         
-        Button shipP2 = new Button ("Submarine");
+        Button shipP2 = new Button (controller.getPlayer2().getTextShipAdding());
         add(gridPane, shipP2, 26, 3, 100, 35);
      
         Text player2 = new Text();
@@ -130,9 +130,15 @@ abstract class Screen {
                 final int x = j;
                 final int y = i;
                 grid[i][j].setOnAction((ActionEvent e) -> {
-                    button.setDisable(true);
-                    button.setStyle("-fx-base: #006600");
-                    addShip(player, x, y, player.getOrientationAdding(), player.getTextShipAdding());
+                    addShip(player, x, y, player.getOrientationAdding(),
+                            player.getTextShipAdding(), grid);
+                    ship.setText(player.getTextShipAdding());
+                    
+                    if(ship.getText().equals("")) {
+                        ship.setDisable(true);
+                        orientation.setDisable(true);
+                    }
+                    
                 });
             }
         }
@@ -144,30 +150,64 @@ abstract class Screen {
         ship.setOnAction((ActionEvent e) -> { /* verificar */
             player.increaseShipAdding();
             ship.setText(player.getTextShipAdding());
+            if(ship.getText().equals("")) {
+                ship.setDisable(true);
+                orientation.setDisable(true);
+            }
         });
     }
 
+    private static void fillShipSpace(Button[][] grid, int x, int y, boolean orientation, int size){
+        if (orientation) {
+            for (int i = y; i < (y+size); i++) {
+                grid[i][x].setDisable(true);
+                grid[i][x].setStyle("-fx-base: #006600");
+            }
+        } else {
+            for (int i = x; i < (x+size); i++) {
+                grid[y][i].setDisable(true);
+                grid[y][i].setStyle("-fx-base: #006600");
+            }
+        }
+    }
+    
     private static void addShip(Player player, int x, int y, 
-            boolean orientation, String textShipAdding) {
-        
-        if(textShipAdding.compareTo("Submarine") == 0) {
-            player.addShip(new Submarine(x, y, orientation));
+            boolean orientation, String textShipAdding, Button[][] grid) {
+                
+        boolean isOk;
+        if(textShipAdding.equals("Submarine (1)")) {
+            isOk = player.addShip(new Submarine(x, y, orientation));
+            if(isOk) {
+                fillShipSpace(grid, x, y, orientation, 1);
+            }
         }
         
-        if(textShipAdding.compareTo("Destroyer") == 0) {
-            player.addShip(new Destroyer(x, y, orientation));
+        if(textShipAdding.equals("Destroyer (2)")) {
+            isOk = player.addShip(new Destroyer(x, y, orientation));
+            if(isOk) {
+                fillShipSpace(grid, x, y, orientation, 2);
+            }
         }
         
-        if(textShipAdding.compareTo("Cruiser") == 0) {
-            player.addShip(new Cruiser(x, y, orientation));
+        if(textShipAdding.equals("Cruiser (3)")) {
+            isOk = player.addShip(new Cruiser(x, y, orientation));
+            if(isOk) {
+                fillShipSpace(grid, x, y, orientation, 3);
+            }
         }
         
-        if(textShipAdding.compareTo("Battleship") == 0) {
-            player.addShip(new Battleship(x, y, orientation));
+        if(textShipAdding.equals("Battleship (4)")) {
+            isOk = player.addShip(new Battleship(x, y, orientation));
+            if(isOk) {
+                fillShipSpace(grid, x, y, orientation, 4);
+            }
         }
         
-        if(textShipAdding.compareTo("Carrier") == 0) {
-            player.addShip(new Carrier(x, y, orientation));
+        if(textShipAdding.equals("Carrier (5)")) {
+            isOk = player.addShip(new Carrier(x, y, orientation));
+            if(isOk) {
+                fillShipSpace(grid, x, y, orientation, 5);
+            }
         }
     }
     

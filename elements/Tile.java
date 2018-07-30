@@ -22,4 +22,8 @@ class Tile {
     boolean isDestroyed(){
         return shipInTile.getDestroyed();
     }
+    
+    Ship getShip(){
+        return this.shipInTile;
+    }
 }

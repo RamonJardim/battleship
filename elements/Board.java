@@ -33,17 +33,65 @@ class Board {
         return shipsAlive > 0;
     }
     
-    public void addShip (Ship ship) { // talvez deva lancar excecao
+    private boolean verifySpaces(Ship ship) {
+        int x = ship.getPosX();
+        int y = ship.getPosY();
+        int size = ship.getSize();
+        boolean vertical = ship.getOrientation();
+        
+        if(vertical){
+            for (int i = y; i < (y+size); i++) {
+                if(!(board[i][x].getShip() instanceof Water)){
+                    return false;
+                }
+            }
+        } else {
+            for (int i = x; i < (x+size); i++) {
+                if(!(board[y][i].getShip() instanceof Water)){
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+        
+    }
+    
+    private boolean verifyAdd(Ship ship) {
         int x = ship.getPosX();
         int y = ship.getPosY();
         int size = ship.getSize();
         boolean vertical = ship.getOrientation();
         
         if(vertical) {
-            addShipVertical(x, y, ship, size);
+            if((y + size) - 1 < 10) {
+                return verifySpaces(ship);
+            } else {
+                return false;
+            }
         } else {
-            addShipHorizontal(x, y, ship, size);
+            if((x + size) - 1 < 10) {
+                return verifySpaces(ship);
+            } else {
+                return false;
+            }
         }
+    }
+    
+    public boolean addShip (Ship ship) { // talvez deva lancar excecao
+        int x = ship.getPosX();
+        int y = ship.getPosY();
+        int size = ship.getSize();
+        boolean vertical = ship.getOrientation();
+        
+        if(vertical && verifyAdd(ship)) {
+            addShipVertical(x, y, ship, size);
+            return true;
+        } else if(verifyAdd(ship)){
+            addShipHorizontal(x, y, ship, size);
+            return true;
+        }
+        return false;
     }
     
     public boolean isDestroyed(int posX, int posY) {

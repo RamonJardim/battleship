@@ -43,7 +43,7 @@ public class Player {
     }
     
     public String getTextOrientation(){
-        return orientationAdding ? "Vertical":"Horizontal";
+        return orientationAdding ? "Horizontal":"Vertical";
     }
     
     public void changeOrientationAdding() {
@@ -64,29 +64,33 @@ public class Player {
         alive = playerBoard.isAlive();
     }
     
-    public void addShip(Ship ship) {
-        if(ship instanceof Submarine) {
-            nSubmarinesToAdd--;
-        }
+    public boolean addShip(Ship ship) {
         
-        if(ship instanceof Destroyer) {
-            nDestroyersToAdd--;
+        boolean isOk = playerBoard.addShip(ship);
+        if(isOk){
+            if(ship instanceof Submarine) {
+                nSubmarinesToAdd--;
+            }
+
+            if(ship instanceof Destroyer) {
+                nDestroyersToAdd--;
+            }
+
+            if(ship instanceof Cruiser) {
+                nCruisersToAdd--;
+            }
+
+            if(ship instanceof Battleship) {
+                nBattleshipsToAdd--;
+            }
+
+            if(ship instanceof Carrier) {
+                nCarriersToAdd--;
+            }
+
+            nShipsToAddToAdd--;
         }
-        
-        if(ship instanceof Cruiser) {
-            nCruisersToAdd--;
-        }
-        
-        if(ship instanceof Battleship) {
-            nBattleshipsToAdd--;
-        }
-        
-        if(ship instanceof Carrier) {
-            nCarriersToAdd--;
-        }
-        
-        nShipsToAddToAdd--;
-        playerBoard.addShip(ship);
+        return isOk;
     }
     
     public int getShipsToAdd(Ship ship) {
@@ -115,17 +119,45 @@ public class Player {
 
     public String getTextShipAdding() {
         int k = shipAdding % 5;
-        switch(k) {
-            case 1:
-                return "Submarine";
-            case 2:
-                return "Destroyer";
-            case 3:
-                return "Cruiser";
-            case 4:
-                return "Battleship";
-            case 0:
-                return "Carrier";
+        if(nShipsToAddToAdd > 0) {
+            switch(k) {
+                case 1:
+                    if(nSubmarinesToAdd > 0) {
+                        return "Submarine (1)";
+                    } else {
+                        shipAdding++;
+                        return getTextShipAdding();
+                    }
+                case 2:
+                    if(nDestroyersToAdd > 0) {
+                        return "Destroyer (2)";
+                    } else {
+                        shipAdding++;
+                        return getTextShipAdding();
+                    }
+
+                case 3:
+                    if(nCruisersToAdd > 0) {
+                        return "Cruiser (3)";
+                    } else {
+                        shipAdding++;
+                        return getTextShipAdding();
+                    }
+                case 4:
+                    if(nBattleshipsToAdd > 0) {
+                        return "Battleship (4)";
+                    } else {
+                        shipAdding++;
+                        return getTextShipAdding();
+                    }
+                case 0:
+                    if(nCarriersToAdd > 0) {
+                        return "Carrier (5)";
+                    } else {
+                        shipAdding++;
+                        return getTextShipAdding();
+                    }
+            }
         }
         return "";
     }
