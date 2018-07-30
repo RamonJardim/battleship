@@ -9,6 +9,10 @@ public class Player {
     private int shipAdding = 1; // 1 = Submarine, .. 5 = carrier
     private boolean orientationAdding = true; // n sei pq, mas se comecar com falso buga
     private Board playerBoard = new Board();
+    private boolean[][] playerShotsReceived;
+
+
+    private int playerNumber;
     
     private int nSubmarinesToAdd = 2;
     private int nDestroyersToAdd = 2;
@@ -17,13 +21,24 @@ public class Player {
     private int nCarriersToAdd = 1;
     private int nShipsToAddToAdd = 7;
 
+    public Player(boolean human, int playerNumber) {
+        this.playerShotsReceived = new boolean[10][10];
+        this.human = human;
+        this.playerNumber = playerNumber;
+        this.playerBoard = new Board();
+    }
+    
     public int getnShipsToAddToAdd() {
         return nShipsToAddToAdd;
     }
     
-    public Player(boolean human, int playerNumber) {
-        this.human = human;
-        this.playerBoard = new Board();
+    
+    public boolean[][] getPlayerShotsReceived() {
+        return playerShotsReceived;
+    }    
+    
+    public int getPlayerNumber() {
+        return this.playerNumber;
     }
     
     public boolean isAlive() {
@@ -52,6 +67,7 @@ public class Player {
     
     public boolean shot(int posX, int posY) { // retorna true se acertou uma embarcacao
         boolean hitShip = playerBoard.hit(posX, posY);
+        playerShotsReceived[posY][posX] = true;
         updateAlive();
         return hitShip;
     }

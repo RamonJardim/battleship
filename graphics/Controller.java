@@ -11,10 +11,15 @@ public class Controller {
         player1 = new Player(true, 1);
         player2 = new Player(isP2Human, 2);
         this.isP2Human = isP2Human;
+        this.gameState = 0;
     }
     
     public void setGameState(int gameState) {
         this.gameState = gameState;
+    }
+    
+    public void increaseGameState() {
+        this.gameState++;
     }
     
     public int getGameState() {

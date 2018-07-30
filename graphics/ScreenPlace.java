@@ -13,15 +13,19 @@ import javafx.stage.Stage;
 import elements.*;
 import ships.*;
 
-abstract class Screen {
+abstract class ScreenPlace {
     
     private static Controller controller;
     private static boolean p1IsVertical;
     private static boolean p2IsVertical;
-    private static int p1Ship = 1;
-    private static int p2Ship = 1;
+    private static Stage primaryStage;
+    private static int gameMode;
+
     
     static void start(Stage primaryStage, int gameMode) { // 1 = PVP, 0 = PVE
+        ScreenPlace.primaryStage = primaryStage;
+        ScreenPlace.gameMode = gameMode;
+        
         controller = new Controller(gameMode == 1);
         Button[][] tableP1 = new Button[10][10];
         Button[][] tableP2 = new Button[10][10];
@@ -63,7 +67,7 @@ abstract class Screen {
         
         addColumnGap(gridPane, 14, 35);
         
-        setButtons(tableP1, shipP1, orientationP1, controller.getPlayer1());
+        setButtonsToPlace(tableP1, shipP1, orientationP1, controller.getPlayer1());
         
         /*-------------------Player2-----------------------*/
         createGrid(tableP2, gridPane, 15);
@@ -87,7 +91,7 @@ abstract class Screen {
         gridPane.getChildren().add(player2);
         
         addColumnGap(gridPane, 27, 10);
-        setButtons(tableP2, shipP2, orientationP2,controller.getPlayer2());
+        setButtonsToPlace(tableP2, shipP2, orientationP2,controller.getPlayer2());
         
         
     }
@@ -124,7 +128,8 @@ abstract class Screen {
         
     }
     
-    private static void setButtons(Button[][] grid, Button ship, Button orientation, Player player) {
+    private static void setButtonsToPlace(Button[][] grid, Button ship, 
+            Button orientation, Player player) {
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
                 final Button button = grid[i][j];
@@ -138,7 +143,8 @@ abstract class Screen {
                     if(ship.getText().equals("")) {
                         ship.setDisable(true);
                         orientation.setDisable(true);
-                        updateGameState(controller, 1, grid, ship, orientation);
+                        updateGameState(controller, controller.getGameState()+1, 
+                                grid, ship, orientation);
                     }
                     
                 });
@@ -228,8 +234,11 @@ abstract class Screen {
         }
         
         if(newState == 2) {
-            blockGrid(2, grid, ships, orientation, false);
+            blockGrid(2, grid, ships, orientation, true);
             AlertBox.advice("Aviso", "Agora comeca o jogo.");
+            primaryStage.close();
+            ScreenShot.start(primaryStage, ScreenPlace.gameMode, controller);
+            
         }
         
         if(newState == 3) {

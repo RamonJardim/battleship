@@ -10,7 +10,7 @@ import javafx.geometry.*;
 import javafx.scene.control.Alert.AlertType;
 
 abstract class AlertBox {
-    public static void display(Stage primaryStage, String title, String message, String option1, String option2) {
+    public static void choice(Stage primaryStage, String title, String message, String option1, String option2) {
         Stage window = new Stage();
         
         window.initModality(Modality.APPLICATION_MODAL);
@@ -24,13 +24,13 @@ abstract class AlertBox {
         Button optionA = new Button(option1);
         optionA.setOnAction((ActionEvent e) -> {
             window.close();
-            Screen.start(primaryStage, 1); // PVP
+            ScreenPlace.start(primaryStage, 1); // PVP
         });
         
         Button optionB = new Button(option2);
         optionB.setOnAction((ActionEvent e) -> {
             window.close();
-            Screen.start(primaryStage, 2); // PVP
+            ScreenPlace.start(primaryStage, 2); // PVP
         });
         
         VBox layout = new VBox(10);
