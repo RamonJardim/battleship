@@ -33,7 +33,6 @@ abstract class Screen {
         
         Scene scene = new Scene(gridPane, 1011,350);
         primaryStage.setScene(scene);
-        
         primaryStage.show();
     }
     
@@ -89,6 +88,8 @@ abstract class Screen {
         
         addColumnGap(gridPane, 27, 10);
         setButtons(tableP2, shipP2, orientationP2,controller.getPlayer2());
+        
+        
     }
     
     private static void add(GridPane grid, Button add, int column, int line,
@@ -137,6 +138,7 @@ abstract class Screen {
                     if(ship.getText().equals("")) {
                         ship.setDisable(true);
                         orientation.setDisable(true);
+                        updateGameState(controller, 1, grid, ship, orientation);
                     }
                     
                 });
@@ -155,6 +157,7 @@ abstract class Screen {
                 orientation.setDisable(true);
             }
         });
+        
     }
 
     private static void fillShipSpace(Button[][] grid, int x, int y, boolean orientation, int size){
@@ -207,6 +210,41 @@ abstract class Screen {
             isOk = player.addShip(new Carrier(x, y, orientation));
             if(isOk) {
                 fillShipSpace(grid, x, y, orientation, 5);
+            }
+        }
+    }
+    
+    private static void updateGameState(Controller controller, int newState,
+            Button[][] grid, Button ships, Button orientation) {
+        controller.setGameState(newState);
+        if(newState == 0) {
+            blockGrid(2, grid, ships, orientation, true);
+            AlertBox.advice("Aviso", "Vez de P1 colocar seus navios.");
+        }
+        
+        if(newState == 1) {
+            blockGrid(1, grid, ships, orientation, true);
+            AlertBox.advice("Aviso", "Vez de P2 colocar seus navios.");
+        }
+        
+        if(newState == 2) {
+            blockGrid(2, grid, ships, orientation, false);
+            AlertBox.advice("Aviso", "Agora comeca o jogo.");
+        }
+        
+        if(newState == 3) {
+            blockGrid(1, grid, ships, orientation, false);
+        }
+    }
+    
+    private static void blockGrid(int player, Button[][] grid, Button ships, Button orientation,
+            boolean toPaint) {
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                grid[i][j].setDisable(true);
+                if(toPaint) {
+                    grid[i][j].setStyle("-fx-base: #006600");
+                }
             }
         }
     }

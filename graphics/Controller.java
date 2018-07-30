@@ -6,12 +6,11 @@ public class Controller {
     private Player player1, player2;
     private boolean isP2Human;
     private int gameState; // 0 = P1 posicionando navios, 1 = P2 posicionando navios
-                           // 3 = P1 jogando, 4 = P2 jogando
+                           // 2 = P1 jogando, 3 = P2 jogando
     public Controller(boolean isP2Human) {
         player1 = new Player(true, 1);
         player2 = new Player(isP2Human, 2);
         this.isP2Human = isP2Human;
-        this.gameState = 0;
     }
     
     public void setGameState(int gameState) {

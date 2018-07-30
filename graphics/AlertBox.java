@@ -7,6 +7,7 @@ import javafx.scene.*;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.geometry.*;
+import javafx.scene.control.Alert.AlertType;
 
 abstract class AlertBox {
     public static void display(Stage primaryStage, String title, String message, String option1, String option2) {
@@ -41,5 +42,13 @@ abstract class AlertBox {
         window.setScene(scene);
         window.showAndWait();
     }
+    
+    public static void advice(String title, String message){
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
 
+        alert.showAndWait();
+    }
 }
