@@ -41,17 +41,18 @@ abstract class ScreenPlace {
     private static void generatePanel(Button[][] tableP1, Button[][] tableP2,
             GridPane gridPane, int gameMode) {
         /* PVP = 1 ou PVE = 2 */
- /*-------------------Player1-----------------------*/
+        Button orientationP1 = new Button(controller.getPlayer1().getTextOrientation());
+        Button shipP1 = new Button(controller.getPlayer2().getTextShipAdding());
+        Button orientationP2 = new Button(controller.getPlayer2().getTextOrientation());
+        Button shipP2 = new Button(controller.getPlayer2().getTextShipAdding());
+        /*-------------------Player1-----------------------*/
         addColumnGap(gridPane, 0, 10);
 
         createGrid(tableP1, gridPane, 0);
 
         addColumnGap(gridPane, 10, 50);
 
-        Button orientationP1 = new Button(controller.getPlayer1().getTextOrientation());
         add(gridPane, orientationP1, 11, 2, 100, 35);
-
-        Button shipP1 = new Button(controller.getPlayer2().getTextShipAdding());
         add(gridPane, shipP1, 11, 3, 100, 35);
 
         Text player1 = new Text();
@@ -66,17 +67,15 @@ abstract class ScreenPlace {
 
         addColumnGap(gridPane, 14, 35);
 
-        setButtonsToPlace(tableP1, tableP2, shipP1, orientationP1, controller.getPlayer1());
+        setButtonsToPlace(tableP1, tableP2, shipP1, shipP2, orientationP1, orientationP2,
+                controller.getPlayer1());
 
         /*-------------------Player2-----------------------*/
         createGrid(tableP2, gridPane, 15);
 
         addColumnGap(gridPane, 25, 50);
 
-        Button orientationP2 = new Button(controller.getPlayer2().getTextOrientation());
         add(gridPane, orientationP2, 26, 2, 100, 35);
-
-        Button shipP2 = new Button(controller.getPlayer2().getTextShipAdding());
         add(gridPane, shipP2, 26, 3, 100, 35);
 
         Text player2 = new Text();
@@ -86,7 +85,8 @@ abstract class ScreenPlace {
         gridPane.getChildren().add(player2);
 
         addColumnGap(gridPane, 27, 10);
-        setButtonsToPlace(tableP2, tableP1, shipP2, orientationP2, controller.getPlayer2());
+        setButtonsToPlace(tableP2, tableP1, shipP2, shipP1, orientationP2,
+                orientationP1, controller.getPlayer2());
 
         blockGrid(gameMode, tableP2, shipP2, orientationP2, false);
 
@@ -123,8 +123,8 @@ abstract class ScreenPlace {
         }
     }
 
-    private static void setButtonsToPlace(Button[][] gridPlacing, Button[][] gridToPlaceLater, Button ship,
-            Button orientation, Player player) {
+    private static void setButtonsToPlace(Button[][] gridPlacing, Button[][] gridToPlaceLater, Button shipPlacing,
+            Button shipToPlaceLater, Button orientationPlacing, Button orientationToPlaceLater, Player player) {
         for (int i = 0; i < gridPlacing.length; i++) {
             for (int j = 0; j < gridPlacing[0].length; j++) {
                 final Button button = gridPlacing[i][j];
@@ -133,36 +133,36 @@ abstract class ScreenPlace {
                 gridPlacing[i][j].setOnAction((ActionEvent e) -> {
                     addShip(player, x, y, player.getOrientationAdding(),
                             player.getTextShipAdding(), gridPlacing);
-                    ship.setText(player.getTextShipAdding());
-
-                    if (ship.getText().equals("")) {
-                        ship.setDisable(true);
-                        orientation.setDisable(true);
-
+                    shipPlacing.setText(player.getTextShipAdding());
+                    if (shipPlacing.getText().equals("")) {
+                        shipPlacing.setDisable(true);
+                        orientationPlacing.setDisable(true);
                         if (controller.getGameState() == 0 || controller.getGameState() == 2) {
                             updateGameState(controller, controller.getGameState() + 1,
-                                    gridPlacing, gridToPlaceLater, ship, orientation);
+                                    gridPlacing, gridToPlaceLater, shipPlacing,
+                                    shipToPlaceLater, orientationPlacing, orientationToPlaceLater);
                         } else {
                             updateGameState(controller, controller.getGameState() + 1,
-                                    gridToPlaceLater, gridPlacing, ship, orientation);
+                                    gridToPlaceLater, gridPlacing, shipToPlaceLater,
+                                    shipPlacing, orientationToPlaceLater, orientationPlacing);
                         }
                     }
 
                 });
             }
         }
-        orientation.setOnAction((ActionEvent e) -> {
+        orientationPlacing.setOnAction((ActionEvent e) -> {
             player.changeOrientationAdding();
-            orientation.setText(player.getTextOrientation());
+            orientationPlacing.setText(player.getTextOrientation());
         });
 
-        ship.setOnAction((ActionEvent e) -> {
+        shipPlacing.setOnAction((ActionEvent e) -> {
             /* verificar */
             player.increaseShipAdding();
-            ship.setText(player.getTextShipAdding());
-            if (ship.getText().equals("")) {
-                ship.setDisable(true);
-                orientation.setDisable(true);
+            shipPlacing.setText(player.getTextShipAdding());
+            if (shipPlacing.getText().equals("")) {
+                shipPlacing.setDisable(true);
+                orientationPlacing.setDisable(true);
             }
         });
 
@@ -223,22 +223,23 @@ abstract class ScreenPlace {
     }
 
     private static void updateGameState(Controller controller, int newState,
-            Button[][] gridP1, Button[][] gridP2, Button ships, Button orientation) { // 0 = P1 posicionando navios, 1 = P2 posicionando navios
+            Button[][] gridP1, Button[][] gridP2, Button shipsP1, Button shipsP2,
+            Button orientationP1, Button orientationP2) { // 0 = P1 posicionando navios, 1 = P2 posicionando navios
         // 2 = P1 jogando, 3 = P2 jogando
         controller.setGameState(newState);
         if (newState == 0) {
-            blockGrid(2, gridP2, ships, orientation, false);
+            blockGrid(2, gridP2, shipsP2, orientationP2, false);
             AlertBoxes.advice("Aviso", "Vez de P1 colocar seus navios.");
         }
 
         if (newState == 1) {
-            blockGrid(1, gridP1, ships, orientation, true);
-            unBlockGrid(gridP2);
+            blockGrid(1, gridP1, shipsP1, orientationP1, true);
+            unBlockGrid(gridP2, shipsP2, orientationP2);
             AlertBoxes.advice("Aviso", "Vez de P2 colocar seus navios.");
         }
 
         if (newState == 2) {
-            blockGrid(2, gridP2, ships, orientation, true);
+            blockGrid(2, gridP2, shipsP2, orientationP2, true);
             AlertBoxes.advice("Aviso", "Agora comeca o jogo.");
             primaryStage.close();
             ScreenShot.start(primaryStage, ScreenPlace.gameMode, controller);
@@ -246,16 +247,19 @@ abstract class ScreenPlace {
         }
 
         if (newState == 3) {
-            blockGrid(1, gridP1, ships, orientation, false);
+            blockGrid(1, gridP1, shipsP1, orientationP1, false);
         }
     }
 
-    private static void unBlockGrid(Button[][] grid) {
+    private static void unBlockGrid(Button[][] grid, Button ship, Button orientation) {
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
                 grid[i][j].setDisable(false);
             }
         }
+
+        ship.setDisable(false);
+        orientation.setDisable(false);
     }
 
     private static void blockGrid(int player, Button[][] grid, Button ships, Button orientation,
