@@ -2,13 +2,13 @@ package elements;
 
 import ships.*;
 
-public class Player {
+public abstract class Player {
     private String name;
     private boolean human;
     private boolean inTurn;
     private boolean alive;
     private int shipAdding = 1; // 1 = Submarine, .. 5 = carrier
-    private boolean orientationAdding = true; // n sei pq, mas se comecar com falso buga
+    protected boolean orientationAdding = true; // n sei pq, mas se comecar com falso buga
     private Board playerBoard = new Board();
     private boolean[][] playerShotsReceived;
 
@@ -37,6 +37,8 @@ public class Player {
     public Coordinates[] getShipParts(int x, int y){
         return playerBoard.getShipParts(x, y);
     }
+    
+    abstract public void generatePlaceGrid();
     
     public boolean[][] getPlayerShotsReceived() {
         return playerShotsReceived;
@@ -137,6 +139,8 @@ public class Player {
         
         return 0;
     }
+    
+    public abstract void fire();
 
     public String getTextShipAdding() {
         int k = shipAdding % 5;

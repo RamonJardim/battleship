@@ -3,6 +3,7 @@ package ships;
 import elements.Coordinates;
 
 public abstract class Ship {
+
     private String type;
     private int size;
     private int DestroyedBlocks = 0;
@@ -10,53 +11,53 @@ public abstract class Ship {
     private boolean vertical;
     private int posX, posY; // Posicao no tabuleiro
     private Coordinates<Integer, Integer> partsPositions[];
-    
+
     public Ship(String type, int size, int posX, int posY, boolean vertical) {
-        partsPositions = new Coordinates [size];
+        partsPositions = new Coordinates[size];
         this.size = size;
         this.type = type;
         this.posX = posX;
         this.posY = posY;
         this.vertical = vertical;
     }
-    
+
     public void setPartsPositions(Coordinates[] partsPositions) {
         this.partsPositions = partsPositions;
     }
-    
-    public Coordinates[] getPartsPositions(){
+
+    public Coordinates[] getPartsPositions() {
         return this.partsPositions;
     }
-    
-    public boolean hit(){ // Retorna true se nao acertou agua, eh sobrescrito na classe Water
+
+    public boolean hit() { // Retorna true se nao acertou agua, eh sobrescrito na classe Water
         DestroyedBlocks++;
-        if(DestroyedBlocks >= size) {
+        if (DestroyedBlocks >= size) {
             isDestroyed = true;
         }
         return true;
-    }    
-    
-    public int getSize(){
+    }
+
+    public int getSize() {
         return this.size;
     }
-    
-    public int getPosX(){
+
+    public int getPosX() {
         return this.posX;
     }
-    
-    public int getPosY(){
+
+    public int getPosY() {
         return this.posY;
     }
-    
-    public boolean getOrientation(){
+
+    public boolean getOrientation() {
         return this.vertical;
     }
-    
+
     public boolean getDestroyed() {
         return this.isDestroyed;
     }
-    
-    public String getType(){
+
+    public String getType() {
         return this.type;
     }
 }

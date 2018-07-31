@@ -14,7 +14,6 @@ import elements.*;
 import ships.*;
 
 abstract class ScreenPlace {
-
     private static Controller controller;
     private static Stage primaryStage;
     private static int gameMode;
@@ -24,8 +23,9 @@ abstract class ScreenPlace {
         ScreenPlace.gameMode = gameMode;
 
         controller = new Controller(gameMode == 1);
-        Button[][] tableP1 = new Button[10][10];
-        Button[][] tableP2 = new Button[10][10];
+        Button[][] tableP1 = controller.getPlaceGrid(1);
+        Button[][] tableP2 = controller.getPlaceGrid(2);
+        
         primaryStage.setTitle("Battleship");
         primaryStage.setResizable(false);
         GridPane gridPane = new GridPane();
@@ -34,8 +34,7 @@ abstract class ScreenPlace {
 
         Scene scene = new Scene(gridPane, 1011, 350);
         primaryStage.setScene(scene);
-        primaryStage.show();
-
+        primaryStage.show(); 
     }
 
     private static void generatePanel(Button[][] tableP1, Button[][] tableP2,
@@ -110,14 +109,13 @@ abstract class ScreenPlace {
         for (int i = 0; i < nLines; i++) {
             Rectangle line = new Rectangle(1, lineHeight);
             line.setFill(color);
-            grid.addColumn(column, line);
+            grid.addColumn(column, line);    }
+
         }
-    }
 
     private static void createGrid(Button[][] table, GridPane grid, int start) {
         for (int i = 0; i < table.length; i++) {
             for (int j = 0; j < table[0].length; j++) {
-                table[i][j] = new Button(j + "," + i);
                 add(grid, table[i][j], (i + 1) + start, j, 35, 35);
             }
         }
@@ -232,10 +230,12 @@ abstract class ScreenPlace {
             AlertBoxes.advice("Aviso", "Vez de P1 colocar seus navios.");
         }
 
-        if (newState == 1) {
+        if (newState == 1 && gameMode == 1) {
             blockGrid(1, gridP1, shipsP1, orientationP1, true);
             unBlockGrid(gridP2, shipsP2, orientationP2);
             AlertBoxes.advice("Aviso", "Vez de P2 colocar seus navios.");
+        } else if(newState == 1 && gameMode == 2) {
+            controller.getPlayer2().generatePlaceGrid();
         }
 
         if (newState == 2) {

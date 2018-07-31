@@ -18,13 +18,15 @@ abstract class ScreenShot {
     private static boolean p1IsVertical;
     private static boolean p2IsVertical;
     private static Stage primaryStage;
+    private static int gameMode;
 
     static void start(Stage primaryStage, int gameMode, Controller controller) { // 1 = PVP, 0 = PVE
         ScreenShot.controller = controller;
+        ScreenShot.gameMode = gameMode;
         controller.setGameState(1);
         ScreenShot.primaryStage = primaryStage;
-        Button[][] tableP1 = new Button[10][10];
-        Button[][] tableP2 = new Button[10][10];
+        Button[][] tableP1 = controller.getShotGrid(1);
+        Button[][] tableP2 = controller.getShotGrid(2);
         primaryStage.setTitle("Battleship");
         primaryStage.setResizable(false);
         GridPane gridPane = new GridPane();
@@ -130,6 +132,9 @@ abstract class ScreenShot {
                             primaryStage.close();
                             AlertBoxes.advice("Fim de jogo!\n", playerShooting.getName() + " Venceu!");
                         }
+                        if(playerShooting instanceof PlayerIA) {
+                            controller.getPlayer2().fire();
+                        }
                     } else {
                         if (numberPlayerShooting == 1) {
                             updateGameState(controller, gridToShoot, gridShooting,
@@ -153,9 +158,13 @@ abstract class ScreenShot {
             unBlockGrid(gridP1, player2.getPlayerShotsReceived());
         }
 
-        if (controller.getGameState() % 2 == 0) {
+        if (controller.getGameState() % 2 == 0 && gameMode == 1) {
             blockGrid(gridP1);
             unBlockGrid(gridP2, player1.getPlayerShotsReceived());
+        } else if(controller.getGameState() % 2 == 0 && gameMode == 2){
+            blockGrid(gridP1);
+            unBlockGrid(gridP2, player1.getPlayerShotsReceived());
+            controller.getPlayer2().fire();
         }
     }
 
