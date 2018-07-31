@@ -107,7 +107,6 @@ abstract class ScreenShot {
                 add(grid, table[i][j], (i + 1) + start, j, 35, 35);
             }
         }
-
     }
 
     private static void setButtonsToShoot(Button[][] gridToShoot, Button[][] gridShooting, Player playerShooting,
@@ -147,7 +146,6 @@ abstract class ScreenShot {
                 });
             }
         }
-
     }
 
     private static void updateGameState(Controller controller, Button[][] gridP1,

@@ -67,36 +67,42 @@ public class PlayerIA extends Player{
             } else {
                 axis = x;
             }
-        }while((size + axis) >= 10);
+        } while((size + axis) >= 10);
         
         if(ship.equals("Submarine")) {
-            if(!super.addShip(new Submarine (x, y, orientationAdding))) {
+            Ship submarine = new Submarine (x, y, orientationAdding);
+            if(!super.addShip(submarine)) {
                 placeShips("Submarine");
             }            
         }
         
         if(ship.equals("Destroyer")) {
-            if(!super.addShip(new Destroyer (x, y, orientationAdding))) {
+            Ship destroyer = new Destroyer (x, y, orientationAdding);
+            if(!super.addShip(destroyer)) {
                 placeShips("Destroyer");
             }    
         }
         
         if(ship.equals("Cruiser")) {
-            if(!super.addShip(new Cruiser (x, y, orientationAdding))) {
+            Ship cruiser = new Cruiser (x, y, orientationAdding);
+            if(!super.addShip(cruiser)) {
                 placeShips("Cruiser");
-            }            }
+            }
+        }
        
         if(ship.equals("Battleship")) {
-            if(!super.addShip(new Battleship (x, y, orientationAdding))) {
+            Ship battleship = new Battleship (x, y, orientationAdding);
+            if(!super.addShip(battleship)) {
                 placeShips("Battleship");
-            }            }
+            }
+        }
         
         if(ship.equals("Carrier")) {
-            if(!super.addShip(new Carrier (x, y, orientationAdding))) {
+            Ship carrier = new Carrier (x, y, orientationAdding);
+            if(!super.addShip(carrier)) {
                 placeShips("Carrier");
             }    
         }
-        
     }
     
     @Override
@@ -105,6 +111,12 @@ public class PlayerIA extends Player{
         int y = (int) (Math.random() * 10);
         
         if(!alreadyShot[y][x]) {
+            try {
+                Thread.sleep(100);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
             buttonsToShot[y][x].fire();
             alreadyShot[y][x] = true;
         } else {
